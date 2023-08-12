@@ -1,26 +1,56 @@
-import React,{useState} from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import useHistory
 import StickyHeader from "./Header";
 import { InputMask } from "primereact/inputmask";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { useFormik } from "formik";
+import { validateCard } from "../api/api";
 import * as Yup from "yup";
+import { Toast } from "primereact/toast";
+import { getValidatedCards } from "../api/api";
 
 const Home = () => {
     const [savedCards, setSavedCards] = useState([]);
+    const [isLoading, setIsLoading] = useState(false); // State for loading overlay
+    const toast = useRef(null);
 
-    const handleSaveCard = (values) => {
+    const navigate = useNavigate(); // Get the history object
+
+    useEffect(() => {
+        // Check if authToken is not present in localStorage
+        const authToken = window.localStorage.getItem("authToken");
+        if (!authToken) {
+            // Redirect to the sign-in page
+            navigate("/login"); // Change the path to your sign-in page
+        }
+        getValidatedCards().then(res=>setSavedCards(res?.validatedCreditCards))
+    }, []);
+
+    const handleSaveCard = async (values) => {
+        setIsLoading(true); // Show loading overlay
         const newCard = {
             cardholderName: values.cardholderName,
             cardNumber: values.creditCardNumber,
             expirationDate: `${values.expirationMonth}/${values.expirationYear}`,
             cvv: values.cvv,
+            token: window.localStorage.getItem("authToken"),
         };
-        console.log(newCard)
-        // Update savedCards using setSavedCards to trigger re-render
-        setSavedCards((prevSavedCards) => [...prevSavedCards, newCard]);
-        
+
+        try {
+            const response = await validateCard(newCard);
+            // Show success toast
+            showSuccessToast("Card details are valid!");
+            // Update savedCards using setSavedCards to trigger re-render
+            getValidatedCards().then(res=>setSavedCards(res?.validatedCreditCards))
+        } catch (error) {
+            // Show error toast
+            showErrorToast("Invalid card details. Please check again.");
+        } finally {
+            setIsLoading(false); // Hide loading overlay
+        }
     };
+
 
 
     const monthOptions = [
@@ -43,7 +73,7 @@ const Home = () => {
         cardholderName: Yup.string().required("Cardholder Name is required"),
         creditCardNumber: Yup.string()
             .required("Credit Card Number is required")
-            .matches(/^[0-9]{16}$/, "Invalid Credit Card Number"),
+            .matches(/^[0-9]{15,16}$/, "Invalid Credit Card Number"),
         expirationMonth: Yup.string().required("Expiration Month is required"),
         expirationYear: Yup.string()
             .required("Expiration Year is required")
@@ -64,16 +94,42 @@ const Home = () => {
         validationSchema: validationSchema,
         onSubmit: (values) => {
             handleSaveCard(values);
-            formik.resetForm();
+            // formik.resetForm();
         },
     });
 
+    // Function to show success toast
+    const showSuccessToast = (message) => {
+        toast.current.show({
+            severity: "success",
+            summary: "Success",
+            detail: message,
+            life: 3000,
+        });
+    };
+
+    // Function to show error toast
+    const showErrorToast = (message) => {
+        toast.current.show({
+            severity: "error",
+            summary: "Error",
+            detail: message,
+            life: 5000,
+        });
+    };
+
     return (
-        <div className="bg-white min-h-screen">
+        <div className="bg-white ">
             <StickyHeader />
+            {isLoading && (
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center z-50">
+                    <div className="w-12 h-12 border-t-4 border-indigo-600 border-solid rounded-full animate-spin"></div>
+                </div>
+            )}
+            <Toast ref={toast} />
             <div className="flex m-4">
                 {/* Credit Card Information Form */}
-                <div className="w-2/3 p-8">
+                <div className="w-2/3 p-8 ">
                     <form
                         className="bg-gray-100 p-6 rounded-lg"
                         onSubmit={formik.handleSubmit}
@@ -182,29 +238,28 @@ const Home = () => {
                         </div>
                         <button
                             type="submit"
-                            className=" col-span-2 p-2  bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                            className="col-span-2 px-5 py-2  bg-indigo-600 text-white rounded-sm hover:bg-indigo-700"
                         >
                             Verify Card Details
                         </button>
                     </form>
                 </div>
                 {/* Saved Credit Cards */}
-                <div className="w-1/3 p-6">
+                <div style={{height:"800px"}} className="w-1/3 p-6  overflow-y-auto">
                     <div className="bg-gray-100 p-4 rounded-lg">
-                    <h2 className="text-xl font-semibold mb-4">Verified Credit Cards</h2>
-                    {savedCards.map((card, index) => (
-                        <div key={index} className="mb-4 p-4 border bg-white rounded-md">
-                            <p className="font-semibold text-lg">{card.cardholderName}</p>
-                            <p className="text-gray-600 mb-2">
-                                Card Number: **** **** **** {card.cardNumber.slice(-4)}
-                            </p>
-                            <p className="text-gray-600">
-                                Expiration Date: {card.expirationDate}
-                            </p>
-                        </div>
-                    ))}
+                        <h2 className="text-xl font-semibold mb-4">Verified Credit Cards</h2>
+                        {savedCards.map((card, index) => (
+                            <div key={index} className="mb-4 p-4 border bg-white rounded-md">
+                                <p className="font-semibold text-lg">{card.cardholderName}</p>
+                                <p className="text-gray-600 mb-2">
+                                    Card Number: **** **** **** {card.cardNumber.slice(-4)}
+                                </p>
+                                <p className="text-gray-600">
+                                    Expiration Date: {card.expirationDate}
+                                </p>
+                            </div>
+                        ))}
                     </div>
-                    
                 </div>
             </div>
         </div>
