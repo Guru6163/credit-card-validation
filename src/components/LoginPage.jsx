@@ -53,7 +53,11 @@ export default function LoginPage() {
         setShowProgressBar(true);
         setError("")
         try {
-            await signIn({ username: user, password });
+            const response = await signIn({ username: user, password });
+            // Extract the token from the response
+            const token = response.token
+            console.log(token)
+            window.localStorage.setItem("authToken", token);
             showSuccessToast("Login successful!");
             setTimeout(() => {
                 navigate("/")
