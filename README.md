@@ -1,70 +1,70 @@
-# Getting Started with Create React App
+# Credit Card Validation
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Welcome to the "Credit Card Validation" project! This application allows users to validate credit card information and manage a list of validated credit cards. This README provides instructions for setting up and running the project.
 
-## Available Scripts
+## Table of Contents
 
-In the project directory, you can run:
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Environment Variable](#environment-variable)
+- [Usage](#usage)
+- [Features](#features)
+- [API Integration](#api-integration)
+- [Folder Structure](#folder-structure)
+- [Contributing](#contributing)
+- [License](#license)
 
-### `npm start`
+## Getting Started
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Prerequisites
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Before running this project, make sure you have the following software installed:
 
-### `npm test`
+- [Node.js](https://nodejs.org/) (at least version 14)
+- [npm](https://www.npmjs.com/) (npm is included with Node.js)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Installation
 
-### `npm run build`
+1. Clone this repository:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+   ```bash
+   git clone https://github.com/guru6163/credit-card-validation.git
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Go to the Folder:
+   ```bash
+   cd credit-card-validation
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. Install Dependencies
+   ```bash
+   npm install
 
-### `npm run eject`
+### API Integration
+This project integrates with an external API for user authentication and credit card validation. The API endpoints are located in the api/api.js file. The base URL for the API is configured using the REACT_APP_API_BASE_URL environment variable.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Before running the application, make sure to set the API base URL by creating a .env file in the root directory and adding the following line:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+REACT_APP_API_BASE_URL=https://cc-validator-backend.onrender.com
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+4. Start the development server
+   ```bash
+   npm start
 
-## Learn More
+## Features
+#### Credit Card Validation: Validate credit card information using Luhn's algorithm.
+#### Sign In and Sign Up: Users can sign in or create a new account.
+#### Saved and Validated Cards: View and manage a list of saved and validated credit cards.
+#### Loading and Error Feedback: Visual feedback for loading and error states using toasts and progress bar.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Folder Structure
+Here's a high-level overview of the project's folder structure:
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+src: Contains the main source code files.
+components: React components used in the application.
+api: API integration and utility functions.
+App.js: The main application component.
+public: Public assets and the HTML template.
+package.json: Project metadata and dependencies.

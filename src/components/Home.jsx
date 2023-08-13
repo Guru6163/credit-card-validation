@@ -23,9 +23,21 @@ const Home = () => {
         if (!authToken) {
             // Redirect to the sign-in page
             navigate("/login"); // Change the path to your sign-in page
+        } else {
+            // Fetch validated cards and handle errors
+            getValidatedCards()
+                .then((res) => {
+                    // Successfully retrieved validated cards
+                    setSavedCards(res?.validatedCreditCards);
+                })
+                .catch((error) => {
+                    // Handle the error
+                    console.error("Error fetching validated cards:", error);
+                    showErrorToast("Error fetching validated cards. Please try again.");
+                });
         }
-        getValidatedCards().then(res=>setSavedCards(res?.validatedCreditCards))
     }, []);
+
 
     const handleSaveCard = async (values) => {
         setIsLoading(true); // Show loading overlay
@@ -42,7 +54,16 @@ const Home = () => {
             // Show success toast
             showSuccessToast("Card details are valid!");
             // Update savedCards using setSavedCards to trigger re-render
-            getValidatedCards().then(res=>setSavedCards(res?.validatedCreditCards))
+            getValidatedCards()
+                .then((res) => {
+                    // Successfully retrieved validated cards
+                    setSavedCards(res?.validatedCreditCards);
+                })
+                .catch((error) => {
+                    // Handle the error
+                    console.error("Error fetching validated cards:", error);
+                    showErrorToast("Error fetching validated cards. Please try again.");
+                });
         } catch (error) {
             // Show error toast
             showErrorToast("Invalid card details. Please check again.");
@@ -245,7 +266,7 @@ const Home = () => {
                     </form>
                 </div>
                 {/* Saved Credit Cards */}
-                <div style={{height:"800px"}} className="w-1/3 p-6  overflow-y-auto">
+                <div style={{ height: "800px" }} className="w-1/3 p-6  overflow-y-auto">
                     <div className="bg-gray-100 p-4 rounded-lg">
                         <h2 className="text-xl font-semibold mb-4">Verified Credit Cards</h2>
                         {savedCards.map((card, index) => (

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Define a base URL for your API
-const baseURL = 'https://cc-validator-backend.onrender.com'; // Replace with your actual API URL
+const baseURL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:4000';
 
 // Create an Axios instance with the base URL
 const api = axios.create({
@@ -36,10 +36,8 @@ window.addEventListener('storage', (event) => {
   }
 });
 
-// Define your API functions
 export const signIn = async (data) => {
   try {
-    // Use the 'api' instance to make a POST request
     const response = await api.post('/signIn', data);
     return response.data;
   } catch (error) {
@@ -49,7 +47,6 @@ export const signIn = async (data) => {
 
 export const signUp = async (data) => {
   try {
-    // Use the 'api' instance to make a POST request
     const response = await api.post('/signUp', data);
     return response.data;
   } catch (error) {
@@ -59,7 +56,6 @@ export const signUp = async (data) => {
 
 export const validateCard = async (data) => {
   try {
-    // Use the 'api' instance to make a POST request
     const response = await api.post('/validate', data);
     return response.data;
   } catch (error) {
@@ -69,7 +65,6 @@ export const validateCard = async (data) => {
 
 export const getValidatedCards = async (data) => {
   try {
-    // Use the 'api' instance to make a POST request
     const response = await api.get('/getValidatedCards');
     return response.data;
   } catch (error) {
@@ -77,4 +72,3 @@ export const getValidatedCards = async (data) => {
   }
 };
 
-// Add more API functions as needed (PUT, DELETE, etc.)
