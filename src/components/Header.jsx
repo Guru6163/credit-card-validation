@@ -34,10 +34,8 @@ const StickyHeader = () => {
                     />
                 </div>
                 <ul className="flex space-x-4">
-                    <Link className="font-semibold bg-gray-100 px-10 py-1 hover:bg-blue-600 hover:text-white rounde-sm" to="/">
-                        Home
-                    </Link>
-                    <Link className="font-semibold bg-gray-100 px-10 py-1 hover:bg-blue-600 hover:text-white rounde-sm" to="/login">
+        
+                    <Link className="font-semibold rounded-md bg-gray-100 px-10 py-1 hover:bg-blue-600 hover:text-white rounde-sm" to="/login">
                         Logout
                     </Link>
                 </ul>
